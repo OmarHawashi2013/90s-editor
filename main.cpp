@@ -35,6 +35,27 @@ HBITMAP backBMP;
 
 vector<char> v;
 
+int hline(HDC backDC) {
+    string num_txt = "";
+    int lines_num = 1;
+
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (v.get_char_at(i) == '\n') {
+            lines_num ++;
+        }
+    }
+
+    for (int i = 0; i < lines_num; i++){
+        num_txt += to_string(i) + '\n';
+    }
+
+    SetTextColor(backDC, RGB(0, 0, 0));
+    RECT rect = {0, 0, 32, screenY};
+
+    DrawText(backDC, num_txt.c_str(), -1, &rect, DT_LEFT | DT_TOP);
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
     switch (uMsg) 
     {
@@ -172,8 +193,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow){
             }
         }
 
+        HBRUSH hbrush_1 = CreateSolidBrush(RGB(255, 255, 255));
 
-        Rectangle(backDC, 0, 0, screenX, screenY);
+        SelectObject(backDC, hbrush_1);
+        Rectangle(backDC, 32, 0, screenX, screenY);
+
+        DeleteObject(hbrush_1);
+
+        HBRUSH hbrush_2 = CreateSolidBrush(RGB(195, 195, 195));
+
+        SelectObject(backDC, hbrush_2);
+        Rectangle(backDC, 0, 0, 32, screenY);
+
+        DeleteObject(hbrush_2);
 
         SetTextColor(backDC, RGB(0, 0, 0));
         SetBkMode(backDC, TRANSPARENT);
@@ -181,9 +213,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow){
             string s = v.to_string();
             size_t pos = s.size() - selector;
             s.insert(pos, "|");
-            RECT rect = { 0, 0, screenX, screenY };
+            RECT rect = { 32, 0, screenX, screenY };
             DrawText(backDC, s.c_str(), -1, &rect, DT_LEFT | DT_TOP);
         }
+
+        hline(backDC);
 
 
         BitBlt(hdc, 0, 0, screenX, screenY, backDC, 0, 0, SRCCOPY);
