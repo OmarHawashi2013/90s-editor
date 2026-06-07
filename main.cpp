@@ -35,16 +35,13 @@ HBITMAP backBMP;
 
 vector<char> v;
 
+HBRUSH hbrush_1 = CreateSolidBrush(RGB(255, 255, 255));
+HBRUSH hbrush_2 = CreateSolidBrush(RGB(195, 195, 195));
+
+int lines_num = 1;
+
 int hline(HDC backDC) {
     string num_txt = "";
-    int lines_num = 1;
-
-    for (int i = 0; i < v.size(); i++)
-    {
-        if (v.get_char_at(i) == '\n') {
-            lines_num ++;
-        }
-    }
 
     for (int i = 0; i < lines_num; i++){
         num_txt += to_string(i) + '\n';
@@ -78,6 +75,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
             break;
         }
     	case WM_DESTROY:
+            DeleteObject(hbrush_1);
+            DeleteObject(hbrush_2);
             DeleteObject(backBMP);
             DeleteDC(backDC);
 
@@ -147,20 +146,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow){
 
         auto frameStart = std::chrono::high_resolution_clock::now();
 
-        PatBlt(
-            backDC, 0, 0, screenX, screenY, BLACKNESS
-        );
-
         if (GetForegroundWindow() == hwnd) {
             for (int i = 0; i < 255; i++) {
                 if (GetAsyncKeyState(i) & 0x0001) {
                     if (i == VK_BACK) {
                         if (!v.empty() && v.size() > selector) {
+                            if (v.get_char_at(v.size() - selector - 1) == '\n') {
+                                lines_num --;
+                            }
                             v.erase(v.size() - selector - 1);
                         }
                     }
                     else if (i == VK_RETURN) {
                         v.insert(v.size() - selector, '\n');
+                        lines_num ++;
                     }
                     else if (i == VK_TAB) {
                         for (int i = 0; i < 8; i++) {
@@ -193,19 +192,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow){
             }
         }
 
-        HBRUSH hbrush_1 = CreateSolidBrush(RGB(255, 255, 255));
-
         SelectObject(backDC, hbrush_1);
         Rectangle(backDC, 32, 0, screenX, screenY);
 
-        DeleteObject(hbrush_1);
-
-        HBRUSH hbrush_2 = CreateSolidBrush(RGB(195, 195, 195));
-
         SelectObject(backDC, hbrush_2);
         Rectangle(backDC, 0, 0, 32, screenY);
-
-        DeleteObject(hbrush_2);
 
         SetTextColor(backDC, RGB(0, 0, 0));
         SetBkMode(backDC, TRANSPARENT);
