@@ -12,7 +12,7 @@ public:
     }
     ~vector() { delete[] buffer; }
 
-    int end() { return size(); } //
+    int end() { return size(); }
     int begin() { return 0; }    
 
     void moveGap(int pos) {
