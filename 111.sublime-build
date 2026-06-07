@@ -1,0 +1,8 @@
+//{
+//	"shell_cmd": "windres ico.rc resource.o && g++ -O3 main.cpp resource.o -o main.exe -s -static-libgcc -static-libstdc++ -lgdi32 -lmsimg32 -lwinmm -lkernel32 -luser32 -lcomctl32 -lshell32 && main.exe",
+//	"working_dir": "${file_path}"
+//}
+
+{
+	"shell_cmd": "g++ -O0 main.cpp -o main.exe -lcomdlg32 -luser32 -lgdi32 -lcomctl32 -lshell32 -lkernel32 && main.exe"
+}
