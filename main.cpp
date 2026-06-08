@@ -176,6 +176,48 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow){
                             selector --;
                         }
                     }
+                    else if (i == VK_UP && v.size() - selector > 0) {
+                        for (int i = v.size() - selector - 1; i >= 0; i--) {
+                            if (v.get_char_at(i) == '\n') {
+                                selector = v.size() - i;
+
+                                break;
+                            }
+                        }
+                    }
+                    else if (i == VK_DOWN && v.size() - selector > 0) {
+                        for (int i = v.size() - selector; i < v.size(); i++) {
+                            if (v.get_char_at(i) == '\n') {
+                                selector = v.size() - (i + 1);
+
+                                break;
+                            }
+                        }
+                    }
+                    else if (i == VK_END && v.size() - selector + 1 > 0) {
+                        int target_pos = v.size();
+
+                        for (int i = v.size() - selector; i < v.size(); i ++) {
+                            if (v.get_char_at(i) == '\n') {
+                                target_pos = i;
+                                break;
+                            }
+                        }
+
+                        selector = v.size() - target_pos;
+                    }
+                    else if (i == VK_HOME && v.size() - selector > 0) {
+                        int target_pos = 0;
+
+                        for (int i = v.size() - selector - 1; i > 0; i --) {
+                            if (v.get_char_at(i) == '\n') {
+                                target_pos = i + 1;
+                                break;
+                            }
+                        }
+
+                        selector = v.size() - target_pos;
+                    }
                     else {
                         WORD char_buf[2] = {0};
 
