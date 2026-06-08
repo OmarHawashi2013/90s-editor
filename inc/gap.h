@@ -38,6 +38,14 @@ public:
 
     
     T* data() { return buffer; } 
+
+    T get_char_at(int index) {
+        if (index < gapStart) {
+            return buffer[index];
+        } else {
+            return buffer[index + (gapEnd - gapStart)];
+        }
+    }
     
     
     std::string to_string() {
